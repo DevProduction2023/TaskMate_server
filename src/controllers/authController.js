@@ -28,12 +28,12 @@ exports.loginUser = async (req, res) => {
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '60m' });
 
     res.cookie('authToken', token, {
-      httpOnly: true,
-      // secure: process.env.NODE_ENV === 'production', // Use secure cookies in production 
-      // sameSite: 'Strict', // Adjust based on your needs
-      // domain: 'yourdomain.com', // Uncomment and set your domain if needed 
-      maxAge: 60 * 60 * 1000,
-    });
+  httpOnly: true,
+  secure: true,              // Required for HTTPS (Render uses HTTPS)
+  sameSite: 'None',          // Required for cross-origin cookies (Render → Vercel)
+  maxAge: 60 * 60 * 1000,    // 1 hour
+});
+
 
     res.status(200).json({ status: 200, message: 'Logged in successfully' , authToken: token });
   } catch (err) {
